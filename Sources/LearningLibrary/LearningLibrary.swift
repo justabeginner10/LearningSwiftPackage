@@ -3,8 +3,8 @@
 
 import UIKit
 
-extension String {
-    func capitalize() -> String {
-        return self.uppercased()
+public class StringHelper {
+    public static func capitalize(_ s: String) -> String {
+        return s.uppercased()
     }
 }
