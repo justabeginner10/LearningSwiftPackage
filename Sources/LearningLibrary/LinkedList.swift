@@ -78,6 +78,57 @@ public struct LinkedList<Value> {
         node.next = Node(value: value, next: node.next)
         return node.next!
     }
+    
+    /// Removes the element from the beginning of the list
+    @discardableResult
+    public mutating func pop() -> Value? {
+        defer {
+            head = head?.next
+            if isEmpty {
+                tail = nil
+            }
+        }
+        
+        return head?.value
+    }
+    
+    /// Removes the last element
+    @discardableResult
+    public mutating func removeLast() -> Value? {
+        guard let head else {
+            return nil
+        }
+        
+        guard head.next != nil else {
+            return pop()
+        }
+        
+        var prev = head
+        var current = head
+        
+        while let next = current.next {
+            prev = current
+            current = next
+        }
+        
+        prev.next = nil
+        tail = prev
+        return current.value
+    }
+    
+    /// Removes the next element of the passed node
+    @discardableResult
+    public mutating func removeAfter(after node: Node<Value>) -> Value? {
+        defer {
+            if node.next == nil {
+                tail = node
+            }
+            
+            node.next = node.next?.next
+        }
+        
+        return node.next?.value
+    }
 }
 
 extension LinkedList: CustomStringConvertible {
@@ -87,17 +138,4 @@ extension LinkedList: CustomStringConvertible {
         }
         return String(describing: head)
     }
-}
-
-struct Foo {
-    var linkedList: LinkedList<Int> = .init()
-    
-    init() {
-        linkedList.append(1)
-        linkedList.append(2)
-        linkedList.append(3)
-        linkedList.append(4)
-    }
-    
-    
 }
