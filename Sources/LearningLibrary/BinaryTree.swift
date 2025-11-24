@@ -49,4 +49,16 @@ public struct BinaryTree<Value> {
         
         return values
     }
+    
+    public func depthFirstSearch(root: TreeNode<Value>?) -> [Value] {
+        guard let root = root else {
+            return []
+        }
+        
+        let leftChildren = depthFirstSearch(root: root.leftChild)
+        let rightChildren = depthFirstSearch(root: root.rightChild)
+        
+        return [root.value] + leftChildren + rightChildren
+    }
 }
+
