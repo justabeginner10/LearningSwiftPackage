@@ -60,5 +60,43 @@ public struct BinaryTree<Value> {
         
         return [root.value] + leftChildren + rightChildren
     }
+    
+    public func breadthFirstSearch() -> [Value] {
+        guard let root = root else {
+            return []
+        }
+        
+        var queue: QueueArray<TreeNode<Value>> = .init()
+        queue.enqueue(root)
+        
+        var values: [Value] = []
+        
+        while !queue.isEmpty {
+            if let current = queue.dequeue() {
+                values.append(current.value)
+                
+                if let leftChild = current.leftChild {
+                    queue.enqueue(leftChild)
+                }
+                
+                if let rightChild = current.rightChild {
+                    queue.enqueue(rightChild)
+                }
+            }
+        }
+        
+        return values
+    }
+    
+    public func breadthFirstSearch(root: TreeNode<Value>?) -> [Value] {
+        guard let root = root else {
+            return []
+        }
+        
+        let leftChildren = depthFirstSearch(root: root.leftChild)
+        let rightChildren = depthFirstSearch(root: root.rightChild)
+        
+        return [root.value] + leftChildren + rightChildren
+    }
 }
 
