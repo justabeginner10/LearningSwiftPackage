@@ -7,17 +7,17 @@
 
 import Foundation
 
-public class Node<Value> {
+public class LinkedListNode<Value> {
     public var value: Value
-    public var next: Node?
+    public var next: LinkedListNode?
     
-    init(value: Value, next: Node? = nil) {
+    init(value: Value, next: LinkedListNode? = nil) {
         self.value = value
         self.next = next
     }
 }
 
-extension Node: CustomStringConvertible {
+extension LinkedListNode: CustomStringConvertible {
     public var description: String {
         guard let next = next else {
             return "\(value)"
@@ -28,8 +28,8 @@ extension Node: CustomStringConvertible {
 }
 
 public struct LinkedList<Value> {
-    public var head: Node<Value>?
-    public var tail: Node<Value>?
+    public var head: LinkedListNode<Value>?
+    public var tail: LinkedListNode<Value>?
     
     public init() {}
     
@@ -39,7 +39,7 @@ public struct LinkedList<Value> {
     
     /// Adds the value at the front of the list
     public mutating func push(_ value: Value) {
-        head = Node(value: value, next: head)
+        head = LinkedListNode(value: value, next: head)
         if tail == nil {
             tail = head
         }
@@ -51,12 +51,12 @@ public struct LinkedList<Value> {
             push(value)
             return
         }
-        tail!.next = Node(value: value)
+        tail!.next = LinkedListNode(value: value)
         tail = tail!.next
     }
     
     /// Finds node at given index
-    public func node(at index: Int) -> Node<Value>? {
+    public func node(at index: Int) -> LinkedListNode<Value>? {
         var currentNode = head
         var currentIndex = 0
         
@@ -70,12 +70,12 @@ public struct LinkedList<Value> {
     
     /// Inserts node after certain node
     @discardableResult
-    public mutating func insert(_ value: Value, after node: Node<Value>) -> Node<Value> {
+    public mutating func insert(_ value: Value, after node: LinkedListNode<Value>) -> LinkedListNode<Value> {
         guard tail !== node else {
             append(value)
             return tail!
         }
-        node.next = Node(value: value, next: node.next)
+        node.next = LinkedListNode(value: value, next: node.next)
         return node.next!
     }
     
@@ -118,7 +118,7 @@ public struct LinkedList<Value> {
     
     /// Removes the next element of the passed node
     @discardableResult
-    public mutating func removeAfter(after node: Node<Value>) -> Value? {
+    public mutating func removeAfter(after node: LinkedListNode<Value>) -> Value? {
         defer {
             if node.next == nil {
                 tail = node
@@ -143,7 +143,7 @@ extension LinkedList: CustomStringConvertible {
 extension LinkedList: Collection {
     public struct Index: Comparable {
         
-        public var node: Node<Value>?
+        public var node: LinkedListNode<Value>?
         
         static public func ==(lhs: Index, rhs: Index) -> Bool {
             switch(lhs.node, rhs.node) {
