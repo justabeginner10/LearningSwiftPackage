@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class TreeNode<Value> {
+public class TreeNode<Value: Equatable> {
     public var value: Value
     public var leftChild: TreeNode?
     public var rightChild: TreeNode?
@@ -19,7 +19,7 @@ public class TreeNode<Value> {
     }
 }
 
-public struct BinaryTree<Value> {
+public struct BinaryTree<Value: Equatable> {
     public var root: TreeNode<Value>?
     
     public init() {}
@@ -100,3 +100,53 @@ public struct BinaryTree<Value> {
     }
 }
 
+extension BinaryTree {
+    
+    /// Method to checks if particular value is present in the tree of not
+    public func checkIfPresent(for root: TreeNode<Value>?, target: Value) -> Bool {
+        if let root = root {
+            if root.value == target { return true }
+        } else {
+            return false
+        }
+        
+        return checkIfPresent(for: root?.leftChild, target: target) || checkIfPresent(for: root?.rightChild, target: target)
+    }
+    
+    /// <T: AdditiveArithmetic> tells the compiler:
+    /// "Accept any type T, as long as it supports '+' and has a '.zero' property"
+    public func calculateTotalSum<T: AdditiveArithmetic>(for root: TreeNode<T>?) -> T {
+        /// This works for Int, Double, CGFloat, Float, etc.
+        guard let root = root else { return .zero }
+        
+        /// 2. The + operator is now guaranteed to exist
+        return root.value + calculateTotalSum(for: root.leftChild) + calculateTotalSum(for: root.rightChild)
+    }
+    
+    public func calculateMaximumRootToLeafPathSum(for root: TreeNode<Int>?) -> Int {
+        guard let root = root else { return Int.min }
+        if root.leftChild == nil && root.rightChild == nil {
+            return root.value
+        }
+        
+        return root.value + max(calculateMaximumRootToLeafPathSum(for: root.leftChild), calculateMaximumRootToLeafPathSum(for: root.rightChild))
+    }
+    
+    public func calculateMaximumRootToLeafPathSum(for root: TreeNode<Double>?) -> Double {
+        guard let root = root else { return -(.infinity) }
+        if root.leftChild == nil && root.rightChild == nil {
+            return root.value
+        }
+        
+        return root.value + max(calculateMaximumRootToLeafPathSum(for: root.leftChild), calculateMaximumRootToLeafPathSum(for: root.rightChild))
+    }
+    
+    public func calculateMaximumRootToLeafPathSum(for root: TreeNode<CGFloat>?) -> CGFloat {
+        guard let root = root else { return -(.infinity) }
+        if root.leftChild == nil && root.rightChild == nil {
+            return root.value
+        }
+        
+        return root.value + max(calculateMaximumRootToLeafPathSum(for: root.leftChild), calculateMaximumRootToLeafPathSum(for: root.rightChild))
+    }
+}
